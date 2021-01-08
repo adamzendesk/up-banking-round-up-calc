@@ -12,17 +12,17 @@ pagesize = "100"
 def get_round_ups(token,pagesize,account_id)
   round_total = 0
   uri = URI.parse("https://api.up.com.au/api/v1/accounts/" + account_id + "/transactions?page[size]=" + pagesize)
-  user_fields = http_req(uri,token,pagesize,account_id)
+  user_fields = http_req(uri,token)
   total = rounder(user_fields, round_total)
   until user_fields['links']['next'].nil?
       uri = URI.parse(user_fields['links']['next'])
-      user_fields = http_req(uri,token,pagesize,account_id)
+      user_fields = http_req(uri,token)
       total += rounder(user_fields, round_total)
   end
 	return total
 end
 
-def http_req(uri,token,pagesize,account_id)  
+def http_req(uri,token)  
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true
   request = Net::HTTP::Get.new(uri.request_uri)
